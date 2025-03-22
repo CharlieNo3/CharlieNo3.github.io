@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Profile - Mentorly</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .sidebar {
+            background-color: #ffffff;
+            width: 240px;
+            height: 100%;
+            border-right: 1px solid #e5e7eb;
+        }
+        .sidebar-item {
+            padding: 12px 20px;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .sidebar-item:hover {
+            background-color: #f3f4f6;
+            color: #3b82f6;
+        }
+        .sidebar-item.active {
+            background-color: #eff6ff;
+            color: #3b82f6;
+            font-weight: 500;
+            border-left: 3px solid #3b82f6;
+        }
+        .main-content {
+            background-color: #f5f7fa;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .profile-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .profile-banner {
+            height: 160px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px 12px 0 0;
+            position: relative;
+        }
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            position: absolute;
+            bottom: -60px;
+            left: 40px;
+            background-color: white;
+        }
+        .badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f3f4f6;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .badge:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .badge-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .badge-locked {
+            opacity: 0.5;
+        }
+        .badge-locked::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tab-active {
+            border-bottom: 2px solid #3b82f6;
+            color: #3b82f6;
+            font-weight: 500;
+        }
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+        .progress-value {
+            height: 100%;
+            border-radius: 4px;
+            background-color: #3b82f6;
+        }
+        .activity-item {
+            border-left: 2px solid #e5e7eb;
+            padding-left: 20px;
+            position: relative;
+        }
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            top: 0;
+            left: -7px;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex h-full">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="p-5">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-purple-100 p-2 rounded-lg">
+                        <i class="fas fa-chalkboard-teacher text-purple-600"></i>
+                    </div>
+                    <h1 class="font-bold text-xl text-gray-800">Mentorly</h1>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <div class="sidebar-item" onclick="navigate('academic-dashboard.html')">
+                    <i class="fas fa-th-large mr-3 w-5 text-center"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-students.html')">
+                    <i class="fas fa-user-graduate mr-3 w-5 text-center"></i>
+                    <span>My Students</span>
+                    <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-auto">2</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-forum.html')">
+                    <i class="fas fa-comments mr-3 w-5 text-center"></i>
+                    <span>Forum</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-messages.html')">
+                    <i class="fas fa-envelope mr-3 w-5 text-center"></i>
+                    <span>Messages</span>
+                    <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-auto">5</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-leaderboard.html')">
+                    <i class="fas fa-trophy mr-3 w-5 text-center"></i>
+                    <span>Leaderboard</span>
+                </div>
+                <div class="sidebar-item active">
+                    <i class="fas fa-user mr-3 w-5 text-center"></i>
+                    <span>Profile</span>
+                </div>
+            </div>
+            
+            <div class="mt-auto pt-20 pb-5 px-5">
+                <div class="flex items-center p-3 bg-gray-100 rounded-lg">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Profile" class="w-10 h-10 rounded-full border-2 border-white">
+                    <div class="ml-3">
+                        <p class="font-medium text-sm text-gray-800">Dr. Sarah Johnson</p>
+                        <p class="text-xs text-gray-500">UX Design Department</p>
+                    </div>
+                    <i class="fas fa-sign-out-alt ml-auto text-gray-500 cursor-pointer" onclick="navigate('login.html')"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content flex-1 p-6">
+            <!-- Profile Header -->
+            <div class="profile-card mb-6">
+                <div class="profile-banner">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Profile" class="profile-avatar">
+                </div>
+                <div class="px-6 pt-16 pb-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800">Dr. Sarah Johnson</h1>
+                            <p class="text-gray-600">Associate Professor, UX Design Department</p>
+                            <div class="flex items-center mt-2">
+                                <i class="fas fa-medal text-purple-500 mr-2"></i>
+                                <span class="font-medium text-purple-700">Bronze Status</span>
+                                <span class="mx-2 text-gray-400">|</span>
+                                <i class="fas fa-star text-yellow-500 mr-2"></i>
+                                <span class="font-medium">2,450 points</span>
+                                <span class="mx-2 text-gray-400">|</span>
+                                <i class="fas fa-trophy text-blue-500 mr-2"></i>
+                                <span class="font-medium text-blue-700">Rank #3</span>
+                            </div>
+                        </div>
+                        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                            Edit Profile
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-6 mt-8">
+                        <div>
+                            <h3 class="text-gray-500 font-medium mb-2">Contact</h3>
+                            <div class="space-y-2">
+                                <p class="flex items-center text-gray-700">
+                                    <i class="fas fa-envelope text-gray-400 w-5 mr-2"></i>
+                                    s.johnson@university.edu
+                                </p>
+                                <p class="flex items-center text-gray-700">
+                                    <i class="fas fa-phone text-gray-400 w-5 mr-2"></i>
+                                    (555) 123-4567
+                                </p>
+                                <p class="flex items-center text-gray-700">
+                                    <i class="fas fa-building text-gray-400 w-5 mr-2"></i>
+                                    Design Building, Room 305
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-gray-500 font-medium mb-2">Specializations</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">UX Design</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">Mobile Interfaces</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">Accessibility</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">User Research</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">Design Systems</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-gray-500 font-medium mb-2">Semester Progress</h3>
+                            <div>
+                                <div class="flex justify-between items-center text-sm mb-1">
+                                    <span class="text-gray-600">Status Resolves</span>
+                                    <span class="font-medium">1,240 pts</span>
+                                </div>
+                                <div class="progress-bar mb-3">
+                                    <div class="progress-value" style="width: 62%"></div>
+                                </div>
+                                
+                                <div class="flex justify-between items-center text-sm mb-1">
+                                    <span class="text-gray-600">Forum Answers</span>
+                                    <span class="font-medium">1,210 pts</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-value" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Tabs -->
+            <div class="mb-6 border-b border-gray-200">
+                <div class="flex space-x-8">
+                    <button class="pb-4 px-2 tab-active">Badges & Achievements</button>
+                    <button class="pb-4 px-2 text-gray-600">Point History</button>
+                    <button class="pb-4 px-2 text-gray-600">Mentoring Stats</button>
+                    <button class="pb-4 px-2 text-gray-600">Settings</button>
+                </div>
+            </div>
+            
+            <!-- Badges Section -->
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Badges & Achievements</h2>
+                
+                <div class="grid grid-cols-6 gap-6">
+                    <!-- Badge 1 (Unlocked) -->
+                    <div class="badge bg-blue-100">
+                        <div class="badge-icon text-blue-600">
+                            <i class="fas fa-comment-dots"></i>
+                        </div>
+                        <p class="text-xs font-medium text-center">First Response</p>
+                    </div>
+                    
+                    <!-- Badge 2 (Unlocked) -->
+                    <div class="badge bg-green-100">
+                        <div class="badge-icon text-green-600">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <p class="text-xs font-medium text-center">Problem Solver</p>
+                    </div>
+                    
+                    <!-- Badge 3 (Unlocked) -->
+                    <div class="badge bg-purple-100">
+                        <div class="badge-icon text-purple-600">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <p class="text-xs font-medium text-center">Mentor</p>
+                    </div>
+                    
+                    <!-- Badge 4 (Unlocked) -->
+                    <div class="badge bg-yellow-100">
+                        <div class="badge-icon text-yellow-600">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <p class="text-xs font-medium text-center">Quick Responder</p>
+                    </div>
+                    
+                    <!-- Badge 5 (Unlocked) -->
+                    <div class="badge bg-pink-100">
+                        <div class="badge-icon text-pink-600">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <p class="text-xs font-medium text-center">Student Favorite</p>
+                    </div>
+                    
+                    <!-- Badge 6 (Locked) -->
+                    <div class="badge badge-locked bg-gray-100">
+                        <div class="badge-icon text-gray-400">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <p class="text-xs font-medium text-center text-gray-400">Top Contributor</p>
+                    </div>
+                    
+                    <!-- Badge 7 (Locked) -->
+                    <div class="badge badge-locked bg-gray-100">
+                        <div class="badge-icon text-gray-400">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <p class="text-xs font-medium text-center text-gray-400">Excellence</p>
+                    </div>
+                    
+                    <!-- Badge 8 (Locked) -->
+                    <div class="badge badge-locked bg-gray-100">
+                        <div class="badge-icon text-gray-400">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <p class="text-xs font-medium text-center text-gray-400">Streak Master</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Certificates Section -->
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Certificates</h2>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="profile-card p-5 flex items-center">
+                        <div class="bg-blue-100 p-4 rounded-lg mr-4">
+                            <i class="fas fa-certificate text-blue-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-800">Outstanding Mentor</h3>
+                            <p class="text-sm text-gray-500">Winter Semester 2022</p>
+                            <div class="flex items-center mt-2">
+                                <i class="fas fa-file-pdf text-red-500 mr-1"></i>
+                                <a href="#" class="text-xs text-blue-600 hover:underline">View Certificate</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-card p-5 flex items-center">
+                        <div class="bg-purple-100 p-4 rounded-lg mr-4">
+                            <i class="fas fa-certificate text-purple-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-800">Exceptional Forum Contributor</h3>
+                            <p class="text-sm text-gray-500">Spring Semester 2023</p>
+                            <div class="flex items-center mt-2">
+                                <i class="fas fa-file-pdf text-red-500 mr-1"></i>
+                                <a href="#" class="text-xs text-blue-600 hover:underline">View Certificate</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Point Activity -->
+            <div>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Point Activity</h2>
+                
+                <div class="profile-card p-6">
+                    <div class="space-y-6">
+                        <div class="activity-item pb-5">
+                            <div class="flex justify-between">
+                                <p class="font-medium text-gray-800">Forum Answer</p>
+                                <span class="text-xs text-gray-500">Today, 12:30 PM</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-1">You answered a question about "Recommendations for user testing remote participants"</p>
+                            <div class="flex items-center mt-2">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs flex items-center">
+                                    <i class="fas fa-plus mr-1"></i> 25 points
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-item pb-5">
+                            <div class="flex justify-between">
+                                <p class="font-medium text-gray-800">Status Resolution</p>
+                                <span class="text-xs text-gray-500">Yesterday, 4:15 PM</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-1">You helped resolve Jason Lee's issue with API integration</p>
+                            <div class="flex items-center mt-2">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs flex items-center">
+                                    <i class="fas fa-plus mr-1"></i> 40 points
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-item pb-5">
+                            <div class="flex justify-between">
+                                <p class="font-medium text-gray-800">Quick Response Badge</p>
+                                <span class="text-xs text-gray-500">3 days ago</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-1">You earned the "Quick Responder" badge for consistently responding to students within 1 hour</p>
+                            <div class="flex items-center mt-2">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs flex items-center">
+                                    <i class="fas fa-plus mr-1"></i> 100 points
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="flex justify-between">
+                                <p class="font-medium text-gray-800">Forum Answer Selected</p>
+                                <span class="text-xs text-gray-500">5 days ago</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-1">Your answer was selected as the best solution for "What are the best practices for creating accessible mobile UI?"</p>
+                            <div class="flex items-center mt-2">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs flex items-center">
+                                    <i class="fas fa-plus mr-1"></i> 50 points
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-center">
+                        <button class="text-blue-500 flex items-center hover:underline">
+                            <i class="fas fa-history mr-2"></i> View Full Point History
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function navigate(url) {
+            window.parent.postMessage({
+                action: 'navigate',
+                url: url
+            }, '*');
+        }
+    </script>
+</body>
+</html> 

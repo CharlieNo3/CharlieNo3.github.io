@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Forum - Mentorly</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .sidebar {
+            background-color: #ffffff;
+            width: 240px;
+            height: 100%;
+            border-right: 1px solid #e5e7eb;
+        }
+        .sidebar-item {
+            padding: 12px 20px;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .sidebar-item:hover {
+            background-color: #f3f4f6;
+            color: #3b82f6;
+        }
+        .sidebar-item.active {
+            background-color: #eff6ff;
+            color: #3b82f6;
+            font-weight: 500;
+            border-left: 3px solid #3b82f6;
+        }
+        .main-content {
+            background-color: #f5f7fa;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .forum-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .question-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .question-urgent {
+            border-left-color: #ef4444;
+        }
+        .question-normal {
+            border-left-color: #f59e0b;
+        }
+        .question-solved {
+            border-left-color: #10b981;
+        }
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .status-urgent {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        .status-normal {
+            background-color: #fef3c7;
+            color: #b45309;
+        }
+        .status-solved {
+            background-color: #d1fae5;
+            color: #047857;
+        }
+        .tab-active {
+            border-bottom: 2px solid #3b82f6;
+            color: #3b82f6;
+            font-weight: 500;
+        }
+        .points-badge {
+            background-color: #dbeafe;
+            color: #1e40af;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex h-full">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="p-5">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-purple-100 p-2 rounded-lg">
+                        <i class="fas fa-chalkboard-teacher text-purple-600"></i>
+                    </div>
+                    <h1 class="font-bold text-xl text-gray-800">Mentorly</h1>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <div class="sidebar-item" onclick="navigate('academic-dashboard.html')">
+                    <i class="fas fa-th-large mr-3 w-5 text-center"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-students.html')">
+                    <i class="fas fa-user-graduate mr-3 w-5 text-center"></i>
+                    <span>My Students</span>
+                    <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-auto">2</span>
+                </div>
+                <div class="sidebar-item active">
+                    <i class="fas fa-comments mr-3 w-5 text-center"></i>
+                    <span>Forum</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-messages.html')">
+                    <i class="fas fa-envelope mr-3 w-5 text-center"></i>
+                    <span>Messages</span>
+                    <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-auto">5</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-leaderboard.html')">
+                    <i class="fas fa-trophy mr-3 w-5 text-center"></i>
+                    <span>Leaderboard</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-profile.html')">
+                    <i class="fas fa-user mr-3 w-5 text-center"></i>
+                    <span>Profile</span>
+                </div>
+            </div>
+            
+            <div class="mt-auto pt-20 pb-5 px-5">
+                <div class="flex items-center p-3 bg-gray-100 rounded-lg">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Profile" class="w-10 h-10 rounded-full border-2 border-white">
+                    <div class="ml-3">
+                        <p class="font-medium text-sm text-gray-800">Dr. Sarah Johnson</p>
+                        <p class="text-xs text-gray-500">UX Design Department</p>
+                    </div>
+                    <i class="fas fa-sign-out-alt ml-auto text-gray-500 cursor-pointer" onclick="navigate('login.html')"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content flex-1 p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">Forum</h1>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white rounded-lg shadow-sm px-4 py-2 flex items-center">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>
+                        <div>
+                            <p class="text-xs text-gray-500">Total Points</p>
+                            <p class="font-bold text-gray-800">2,450</p>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <input type="text" placeholder="Search questions..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Forum Stats -->
+            <div class="grid grid-cols-4 gap-6 mb-6">
+                <div class="forum-card p-5">
+                    <h2 class="text-gray-600 text-sm font-medium mb-3">Questions Answered</h2>
+                    <div class="flex items-center">
+                        <span class="text-4xl font-bold text-gray-800">48</span>
+                        <span class="ml-2 text-green-500 text-sm font-medium flex items-center">
+                            <i class="fas fa-arrow-up mr-1"></i> 
+                            <span>12%</span>
+                        </span>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-2">Past 30 days</p>
+                </div>
+                
+                <div class="forum-card p-5">
+                    <h2 class="text-gray-600 text-sm font-medium mb-3">Points Earned</h2>
+                    <div class="flex items-center">
+                        <span class="text-4xl font-bold text-gray-800">1,210</span>
+                        <span class="ml-2 text-green-500 text-sm font-medium flex items-center">
+                            <i class="fas fa-arrow-up mr-1"></i> 
+                            <span>8%</span>
+                        </span>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-2">From forum answers</p>
+                </div>
+                
+                <div class="forum-card p-5">
+                    <h2 class="text-gray-600 text-sm font-medium mb-3">Avg. Response Time</h2>
+                    <div class="flex items-center">
+                        <span class="text-4xl font-bold text-gray-800">2.5h</span>
+                        <span class="ml-2 text-green-500 text-sm font-medium flex items-center">
+                            <i class="fas fa-arrow-down mr-1"></i> 
+                            <span>15%</span>
+                        </span>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-2">Faster than last month</p>
+                </div>
+                
+                <div class="forum-card p-5">
+                    <h2 class="text-gray-600 text-sm font-medium mb-3">Satisfaction Rate</h2>
+                    <div class="flex items-center">
+                        <span class="text-4xl font-bold text-gray-800">96%</span>
+                        <span class="ml-2 text-green-500 text-sm font-medium flex items-center">
+                            <i class="fas fa-arrow-up mr-1"></i> 
+                            <span>3%</span>
+                        </span>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-2">Based on student feedback</p>
+                </div>
+            </div>
+            
+            <!-- Forum Tabs -->
+            <div class="mb-6 border-b border-gray-200">
+                <div class="flex space-x-8">
+                    <button class="pb-4 px-2 tab-active">All Questions</button>
+                    <button class="pb-4 px-2 text-gray-600">Unanswered</button>
+                    <button class="pb-4 px-2 text-gray-600">Your Expertise</button>
+                    <button class="pb-4 px-2 text-gray-600">Your Answers</button>
+                </div>
+            </div>
+            
+            <!-- Question Filters -->
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex space-x-3">
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>All fields</option>
+                        <option>UX Design</option>
+                        <option>Frontend Development</option>
+                        <option>Backend Development</option>
+                        <option>Data Science</option>
+                    </select>
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>All statuses</option>
+                        <option>Urgent</option>
+                        <option>Open</option>
+                        <option>Solved</option>
+                    </select>
+                </div>
+                <div class="flex space-x-3">
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>Sort by: Latest</option>
+                        <option>Sort by: Points</option>
+                        <option>Sort by: Popularity</option>
+                        <option>Sort by: Urgent</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Questions List -->
+            <div class="space-y-4 mb-6">
+                <!-- Question 1 - Urgent -->
+                <div class="question-card question-urgent p-5">
+                    <div class="flex justify-between">
+                        <div class="flex items-start">
+                            <div class="flex flex-col items-center mr-4">
+                                <button class="p-1 text-gray-500 hover:text-blue-500">
+                                    <i class="fas fa-chevron-up"></i>
+                                </button>
+                                <span class="font-medium text-gray-800 my-1">12</span>
+                                <button class="p-1 text-gray-500 hover:text-red-500">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <span class="status-badge status-urgent mr-2">Urgent</span>
+                                    <span class="points-badge mr-2">+50 points</span>
+                                    <span class="text-xs text-gray-500">2 hours ago</span>
+                                </div>
+                                <h3 class="font-medium text-lg text-gray-800 mb-2">Recommendations for animation libraries compatible with iOS app transitions?</h3>
+                                <p class="text-gray-600 text-sm mb-3">I'm working on a cross-platform application and need to implement smooth transitions that work well on iOS devices. Looking for library recommendations that have good performance...</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Animation</span>
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">iOS</span>
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Mobile</span>
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">UX Design</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <div class="flex items-center mb-2">
+                                <span class="text-gray-500 text-sm mr-2">0 answers</span>
+                                <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Jessica" class="w-6 h-6 rounded-full">
+                            </div>
+                            <button class="mt-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onclick="toggleModal('questionModal')">
+                                Answer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Question 2 - Normal -->
+                <div class="question-card question-normal p-5">
+                    <div class="flex justify-between">
+                        <div class="flex items-start">
+                            <div class="flex flex-col items-center mr-4">
+                                <button class="p-1 text-gray-500 hover:text-blue-500">
+                                    <i class="fas fa-chevron-up"></i>
+                                </button>
+                                <span class="font-medium text-gray-800 my-1">8</span>
+                                <button class="p-1 text-gray-500 hover:text-red-500">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <span class="status-badge status-normal mr-2">Open</span>
+                                    <span class="points-badge mr-2">+30 points</span>
+                                    <span class="text-xs text-gray-500">1 day ago</span>
+                                </div>
+                                <h3 class="font-medium text-lg text-gray-800 mb-2">What are the best practices for creating accessible mobile UI?</h3>
+                                <p class="text-gray-600 text-sm mb-3">I'm working on designing a mobile app that needs to be accessible for all users, including those with visual impairments. What are the current best practices for ensuring accessibility?</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Accessibility</span>
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Mobile</span>
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">UX Design</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <div class="flex items-center mb-2">
+                                <span class="text-gray-500 text-sm mr-2">2 answers</span>
+                                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Jason" class="w-6 h-6 rounded-full">
+                            </div>
+                            <button class="mt-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onclick="toggleModal('questionModal')">
+                                Answer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Question 3 - Solved -->
+                <div class="question-card question-solved p-5">
+                    <div class="flex justify-between">
+                        <div class="flex items-start">
+                            <div class="flex flex-col items-center mr-4">
+                                <button class="p-1 text-gray-500 hover:text-blue-500">
+                                    <i class="fas fa-chevron-up"></i>
+                                </button>
+                                <span class="font-medium text-gray-800 my-1">15</span>
+                                <button class="p-1 text-gray-500 hover:text-red-500">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <span class="status-badge status-solved mr-2">Solved</span>
+                                    <span class="points-badge mr-2">+25 points</span>
+                                    <span class="text-xs text-gray-500">3 days ago</span>
+                                </div>
+                                <h3 class="font-medium text-lg text-gray-800 mb-2">Recommendations for user testing remote participants?</h3>
+                                <p class="text-gray-600 text-sm mb-3">Due to COVID restrictions, we need to conduct user testing remotely. What tools and methods do you recommend for effective remote user testing with good data collection?</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">User Testing</span>
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Remote</span>
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Research</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <div class="flex items-center mb-2">
+                                <span class="text-gray-500 text-sm mr-2">4 answers</span>
+                                <img src="https://randomuser.me/api/portraits/women/42.jpg" alt="Emily" class="w-6 h-6 rounded-full">
+                            </div>
+                            <div class="flex items-center mt-auto">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-green-500 text-sm">Your answer selected</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Question 4 - Normal -->
+                <div class="question-card question-normal p-5">
+                    <div class="flex justify-between">
+                        <div class="flex items-start">
+                            <div class="flex flex-col items-center mr-4">
+                                <button class="p-1 text-gray-500 hover:text-blue-500">
+                                    <i class="fas fa-chevron-up"></i>
+                                </button>
+                                <span class="font-medium text-gray-800 my-1">6</span>
+                                <button class="p-1 text-gray-500 hover:text-red-500">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <span class="status-badge status-normal mr-2">Open</span>
+                                    <span class="points-badge mr-2">+35 points</span>
+                                    <span class="text-xs text-gray-500">4 days ago</span>
+                                </div>
+                                <h3 class="font-medium text-lg text-gray-800 mb-2">How to implement JWT authentication in React?</h3>
+                                <p class="text-gray-600 text-sm mb-3">I'm building a React application that needs to authenticate with a backend API using JWT tokens. What's the best way to handle token storage, refreshing, and securing routes?</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">React</span>
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">JWT</span>
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Authentication</span>
+                                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Frontend</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <div class="flex items-center mb-2">
+                                <span class="text-gray-500 text-sm mr-2">3 answers</span>
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Alex" class="w-6 h-6 rounded-full">
+                            </div>
+                            <button class="mt-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onclick="toggleModal('questionModal')">
+                                Answer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="flex justify-between items-center mb-6">
+                <p class="text-sm text-gray-600">Showing 4 of 24 questions</p>
+                <div class="flex space-x-1">
+                    <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">Previous</button>
+                    <button class="px-3 py-1 rounded bg-blue-500 text-white">1</button>
+                    <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">2</button>
+                    <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">3</button>
+                    <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Question Answer Modal -->
+    <div id="questionModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg w-3/4 max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-gray-800">Answer Question</h3>
+                    <button class="text-gray-500 hover:text-gray-700" onclick="toggleModal('questionModal')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <div class="mb-6">
+                    <div class="flex items-center mb-2">
+                        <span class="status-badge status-urgent mr-2">Urgent</span>
+                        <span class="points-badge mr-2">+50 points</span>
+                        <span class="text-xs text-gray-500">2 hours ago</span>
+                    </div>
+                    <h3 class="font-medium text-lg text-gray-800 mb-2">Recommendations for animation libraries compatible with iOS app transitions?</h3>
+                    <p class="text-gray-600 mb-3">I'm working on a cross-platform application and need to implement smooth transitions that work well on iOS devices. I've tried a few libraries but they either don't perform well or don't match the native iOS feel.</p>
+                    <p class="text-gray-600 mb-3">Looking for library recommendations that have good performance and closely match the iOS design guidelines. Has anyone worked with something that fits these requirements?</p>
+                    <div class="flex items-center mt-4">
+                        <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Jessica" class="w-8 h-8 rounded-full">
+                        <div class="ml-3">
+                            <p class="font-medium text-sm text-gray-800">Jessica Chen</p>
+                            <p class="text-xs text-gray-500">UX Design Intern</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium text-gray-800 mb-3">Your Answer</h4>
+                    <div class="border border-gray-300 rounded-lg overflow-hidden">
+                        <div class="bg-gray-50 px-4 py-2 border-b border-gray-300 flex">
+                            <button class="mr-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button class="mr-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button class="mr-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-link"></i>
+                            </button>
+                            <button class="mr-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-list"></i>
+                            </button>
+                            <button class="mr-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-code"></i>
+                            </button>
+                        </div>
+                        <textarea class="w-full p-4 focus:outline-none" rows="8" placeholder="Write your answer here..."></textarea>
+                        <div class="bg-gray-50 px-4 py-2 border-t border-gray-300 flex justify-between items-center">
+                            <div class="text-xs text-gray-500">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Support markdown and code snippets
+                            </div>
+                            <div>
+                                <button class="px-3 py-1 text-blue-500 hover:bg-blue-50 rounded mr-2">
+                                    <i class="fas fa-paperclip mr-1"></i>
+                                    Attach
+                                </button>
+                                <button class="px-3 py-1 text-blue-500 hover:bg-blue-50 rounded">
+                                    <i class="fas fa-image mr-1"></i>
+                                    Image
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center text-gray-600">
+                        <i class="fas fa-robot mr-2"></i>
+                        <span>AI-assisted answer suggestions available</span>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50" onclick="toggleModal('questionModal')">
+                            Cancel
+                        </button>
+                        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                            Submit Answer (+50 points)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function navigate(url) {
+            window.parent.postMessage({
+                action: 'navigate',
+                url: url
+            }, '*');
+        }
+        
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html> 

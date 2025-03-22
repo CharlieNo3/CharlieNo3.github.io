@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Mentorly</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .sidebar {
+            background-color: #ffffff;
+            width: 240px;
+            height: 100%;
+            border-right: 1px solid #e5e7eb;
+        }
+        .sidebar-item {
+            padding: 12px 20px;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .sidebar-item:hover {
+            background-color: #f3f4f6;
+            color: #3b82f6;
+        }
+        .sidebar-item.active {
+            background-color: #eff6ff;
+            color: #3b82f6;
+            font-weight: 500;
+            border-left: 3px solid #3b82f6;
+        }
+        .main-content {
+            background-color: #f5f7fa;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .chat-user {
+            padding: 12px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .chat-user:hover {
+            background-color: #f9fafb;
+        }
+        .chat-user.active {
+            background-color: #eff6ff;
+            border-left-color: #3b82f6;
+        }
+        .message-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            border-radius: 16px;
+            position: relative;
+        }
+        .message-outgoing {
+            background-color: #3b82f6;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        .message-incoming {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            border-bottom-left-radius: 4px;
+        }
+        .message-time {
+            font-size: 0.65rem;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+        .message-attachment {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 8px;
+        }
+        .online-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #10b981;
+            display: inline-block;
+        }
+        .status-item {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .status-help {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left-color: #ef4444;
+        }
+        .status-stalled {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left-color: #f59e0b;
+        }
+        .status-ontrack {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left-color: #10b981;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex h-full">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="p-5">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-purple-100 p-2 rounded-lg">
+                        <i class="fas fa-chalkboard-teacher text-purple-600"></i>
+                    </div>
+                    <h1 class="font-bold text-xl text-gray-800">Mentorly</h1>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <div class="sidebar-item" onclick="navigate('academic-dashboard.html')">
+                    <i class="fas fa-th-large mr-3 w-5 text-center"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-students.html')">
+                    <i class="fas fa-user-graduate mr-3 w-5 text-center"></i>
+                    <span>My Students</span>
+                    <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-auto">2</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-forum.html')">
+                    <i class="fas fa-comments mr-3 w-5 text-center"></i>
+                    <span>Forum</span>
+                </div>
+                <div class="sidebar-item active">
+                    <i class="fas fa-envelope mr-3 w-5 text-center"></i>
+                    <span>Messages</span>
+                    <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-auto">5</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-leaderboard.html')">
+                    <i class="fas fa-trophy mr-3 w-5 text-center"></i>
+                    <span>Leaderboard</span>
+                </div>
+                <div class="sidebar-item" onclick="navigate('academic-profile.html')">
+                    <i class="fas fa-user mr-3 w-5 text-center"></i>
+                    <span>Profile</span>
+                </div>
+            </div>
+            
+            <div class="mt-auto pt-20 pb-5 px-5">
+                <div class="flex items-center p-3 bg-gray-100 rounded-lg">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Profile" class="w-10 h-10 rounded-full border-2 border-white">
+                    <div class="ml-3">
+                        <p class="font-medium text-sm text-gray-800">Dr. Sarah Johnson</p>
+                        <p class="text-xs text-gray-500">UX Design Department</p>
+                    </div>
+                    <i class="fas fa-sign-out-alt ml-auto text-gray-500 cursor-pointer" onclick="navigate('login.html')"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex flex-1">
+            <!-- Chat List -->
+            <div class="w-80 bg-white border-r border-gray-200">
+                <div class="p-4 border-b border-gray-200">
+                    <div class="relative">
+                        <input type="text" placeholder="Search messages..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <div class="overflow-y-auto" style="height: calc(100vh - 180px);">
+                    <!-- Student 1 (Active) -->
+                    <div class="chat-user active">
+                        <div class="flex justify-between items-start">
+                            <div class="flex">
+                                <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Jessica" class="w-12 h-12 rounded-full">
+                                <div class="ml-3">
+                                    <p class="font-medium text-gray-800">Jessica Chen</p>
+                                    <p class="text-xs text-gray-500">UX Design Intern</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="online-indicator mr-1"></span>
+                                        <span class="text-xs text-green-600">Online</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-xs text-gray-500">12m</div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2 truncate">Thanks for the animation resources! I'll take a look at them right away.</p>
+                    </div>
+                    
+                    <!-- Student 2 -->
+                    <div class="chat-user">
+                        <div class="flex justify-between items-start">
+                            <div class="flex">
+                                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Jason" class="w-12 h-12 rounded-full">
+                                <div class="ml-3">
+                                    <p class="font-medium text-gray-800">Jason Lee</p>
+                                    <p class="text-xs text-gray-500">Frontend Development Intern</p>
+                                    <p class="text-xs text-gray-500 mt-1">Last seen 2h ago</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="text-xs text-gray-500">2h</div>
+                                <div class="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mt-1">3</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2 truncate">I'm still having issues with the API integration. Could we schedule a call to discuss?</p>
+                    </div>
+                    
+                    <!-- Department Group -->
+                    <div class="chat-user">
+                        <div class="flex justify-between items-start">
+                            <div class="flex">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold">
+                                    UX
+                                </div>
+                                <div class="ml-3">
+                                    <p class="font-medium text-gray-800">UX Department</p>
+                                    <p class="text-xs text-gray-500">Group • 8 members</p>
+                                    <p class="text-xs text-gray-500 mt-1">Prof. Wilson is typing...</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="text-xs text-gray-500">1h</div>
+                                <div class="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mt-1">1</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2 truncate">Prof. Wilson: Has everyone submitted their mid-semester reports?</p>
+                    </div>
+                    
+                    <!-- Student 3 -->
+                    <div class="chat-user">
+                        <div class="flex justify-between items-start">
+                            <div class="flex">
+                                <img src="https://randomuser.me/api/portraits/women/42.jpg" alt="Emily" class="w-12 h-12 rounded-full">
+                                <div class="ml-3">
+                                    <p class="font-medium text-gray-800">Emily Zhang</p>
+                                    <p class="text-xs text-gray-500">UX Researcher Intern</p>
+                                    <p class="text-xs text-gray-500 mt-1">Last seen 4h ago</p>
+                                </div>
+                            </div>
+                            <div class="text-xs text-gray-500">4h</div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2 truncate">I've completed the user interviews and compiled the findings. Would like your feedback.</p>
+                    </div>
+                    
+                    <!-- Student 4 -->
+                    <div class="chat-user">
+                        <div class="flex justify-between items-start">
+                            <div class="flex">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Alex" class="w-12 h-12 rounded-full">
+                                <div class="ml-3">
+                                    <p class="font-medium text-gray-800">Alex Wong</p>
+                                    <p class="text-xs text-gray-500">Data Science Intern</p>
+                                    <p class="text-xs text-gray-500 mt-1">Last seen 6h ago</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="text-xs text-gray-500">6h</div>
+                                <div class="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mt-1">1</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2 truncate">Can we discuss the data visualization library choices for the project?</p>
+                    </div>
+                </div>
+                
+                <div class="p-4 border-t border-gray-200">
+                    <button class="w-full flex items-center justify-center space-x-2 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>New Message</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Chat Content -->
+            <div class="flex-1 flex flex-col">
+                <!-- Chat Header -->
+                <div class="p-4 border-b border-gray-200 bg-white">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Jessica" class="w-10 h-10 rounded-full">
+                            <div class="ml-3">
+                                <div class="flex items-center">
+                                    <h2 class="font-medium text-gray-800">Jessica Chen</h2>
+                                    <span class="online-indicator ml-2"></span>
+                                </div>
+                                <p class="text-xs text-gray-500">UX Design Intern • Animation Project</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="p-2 text-gray-500 hover:bg-gray-100 rounded-full">
+                                <i class="fas fa-phone"></i>
+                            </button>
+                            <button class="p-2 text-gray-500 hover:bg-gray-100 rounded-full">
+                                <i class="fas fa-video"></i>
+                            </button>
+                            <button class="p-2 text-gray-500 hover:bg-gray-100 rounded-full">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Messages Area -->
+                <div class="flex-1 p-4 overflow-y-auto bg-gray-50" style="height: calc(100vh - 180px);">
+                    <!-- Date Divider -->
+                    <div class="flex justify-center mb-6">
+                        <span class="text-xs font-medium text-gray-500 bg-gray-200 px-3 py-1 rounded-full">Today</span>
+                    </div>
+                    
+                    <!-- Status Update -->
+                    <div class="status-item status-help mb-6">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-medium text-red-600">Status Update: Need Help</h4>
+                            <span class="text-xs text-gray-500">11:45 AM</span>
+                        </div>
+                        <div class="mt-2">
+                            <p class="text-sm font-medium text-gray-800">Animation Implementation Issues</p>
+                            <p class="text-sm text-gray-600 mt-1">I'm struggling with implementing the animation for the onboarding screens. The timing feels off and I'm not sure how to make it smoother. Could use some guidance on best practices for mobile transitions.</p>
+                        </div>
+                        <div class="flex justify-end mt-2">
+                            <button class="text-xs text-blue-600 hover:underline">View Details</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Outgoing Message with Time -->
+                    <div class="flex flex-col items-end">
+                        <div class="message-bubble message-outgoing">
+                            <p>Hi Jessica, I've reviewed your status update about the animation issue. This is a common challenge with mobile animations.</p>
+                        </div>
+                        <span class="message-time">11:48 AM</span>
+                    </div>
+                    
+                    <!-- Outgoing Message with Time and Attachment -->
+                    <div class="flex flex-col items-end">
+                        <div class="message-bubble message-outgoing">
+                            <p>Here are some resources that might help you with the animation timing:</p>
+                            <div class="message-attachment">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-800">Mobile Animation Guidelines.pdf</p>
+                                        <p class="text-xs text-gray-500">1.2 MB • PDF</p>
+                                    </div>
+                                    <button class="ml-auto p-2 text-blue-600 hover:bg-blue-50 rounded-full">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="message-time">11:50 AM</span>
+                    </div>
+                    
+                    <!-- Outgoing Message with Time -->
+                    <div class="flex flex-col items-end">
+                        <div class="message-bubble message-outgoing">
+                            <p>Also, check out this article on the principle of "easing" in animations. The key is to make the motion feel natural by accelerating and decelerating properly.</p>
+                            <p class="text-blue-300 mt-2 hover:underline cursor-pointer">https://uxdesign.cc/the-principles-of-animation-in-ux-design</p>
+                        </div>
+                        <span class="message-time">11:51 AM</span>
+                    </div>
+                    
+                    <!-- Incoming Message with Time -->
+                    <div class="flex flex-col items-start">
+                        <div class="message-bubble message-incoming">
+                            <p>Thank you so much! I'll take a look at these resources right away.</p>
+                        </div>
+                        <span class="message-time">11:52 AM</span>
+                    </div>
+                    
+                    <!-- Incoming Message with Time -->
+                    <div class="flex flex-col items-start">
+                        <div class="message-bubble message-incoming">
+                            <p>Should I be using a specific animation library for this, or is it better to code the animations from scratch?</p>
+                        </div>
+                        <span class="message-time">11:53 AM</span>
+                    </div>
+                    
+                    <!-- Outgoing Message with Time -->
+                    <div class="flex flex-col items-end">
+                        <div class="message-bubble message-outgoing">
+                            <p>For your current project, I'd recommend using a library like Lottie or React Spring. It'll save you time and ensure consistent animations across different devices.</p>
+                            <p>Would you like me to schedule a quick 15-minute call tomorrow to walk through this together?</p>
+                        </div>
+                        <span class="message-time">12:01 PM</span>
+                    </div>
+                    
+                    <!-- Incoming Message with Time -->
+                    <div class="flex flex-col items-start">
+                        <div class="message-bubble message-incoming">
+                            <p>That would be incredibly helpful! I'm available anytime after 2 PM tomorrow.</p>
+                        </div>
+                        <span class="message-time">12:05 PM</span>
+                    </div>
+                    
+                    <!-- Outgoing Message with Time -->
+                    <div class="flex flex-col items-end">
+                        <div class="message-bubble message-outgoing">
+                            <p>Perfect. I'll send a calendar invite for 2:30 PM. In the meantime, try experimenting with the React Spring examples from their documentation.</p>
+                        </div>
+                        <span class="message-time">12:07 PM</span>
+                    </div>
+                    
+                    <!-- Incoming Message with Time -->
+                    <div class="flex flex-col items-start">
+                        <div class="message-bubble message-incoming">
+                            <p>Thanks for the animation resources! I'll take a look at them right away. I've already started looking at React Spring and it seems promising.</p>
+                        </div>
+                        <span class="message-time">12:12 PM</span>
+                    </div>
+                    
+                    <!-- Typing Indicator -->
+                    <div class="flex items-center mt-4">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gray-200 text-gray-500">
+                            <i class="fas fa-keyboard"></i>
+                        </div>
+                        <div class="ml-2 text-sm text-gray-500">Jessica is typing...</div>
+                    </div>
+                </div>
+                
+                <!-- Message Input -->
+                <div class="p-4 border-t border-gray-200 bg-white">
+                    <div class="flex items-end">
+                        <div class="flex-1 relative">
+                            <textarea placeholder="Type a message..." class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" style="max-height: 120px; min-height: 50px;" rows="1"></textarea>
+                            <div class="absolute right-3 bottom-3 flex space-x-2 text-gray-500">
+                                <button class="hover:text-gray-700">
+                                    <i class="fas fa-smile"></i>
+                                </button>
+                                <button class="hover:text-gray-700">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                                <button class="hover:text-gray-700">
+                                    <i class="fas fa-image"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="ml-2 p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Message Tools -->
+                    <div class="flex justify-between mt-3">
+                        <div class="flex space-x-3 text-xs">
+                            <button class="flex items-center text-gray-600 hover:text-blue-600">
+                                <i class="fas fa-robot mr-1"></i>
+                                <span>AI Suggest</span>
+                            </button>
+                            <span class="text-gray-300">|</span>
+                            <button class="flex items-center text-gray-600 hover:text-blue-600">
+                                <i class="fas fa-calendar-alt mr-1"></i>
+                                <span>Schedule Meeting</span>
+                            </button>
+                        </div>
+                        <div class="flex space-x-3 text-xs">
+                            <button class="flex items-center text-purple-600 hover:text-purple-800">
+                                <i class="fas fa-check-circle mr-1"></i>
+                                <span>Resolve Status</span>
+                            </button>
+                            <span class="text-gray-300">|</span>
+                            <button class="flex items-center text-gray-600 hover:text-blue-600">
+                                <i class="fas fa-award mr-1"></i>
+                                <span>Award Points</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function navigate(url) {
+            window.parent.postMessage({
+                action: 'navigate',
+                url: url
+            }, '*');
+        }
+    </script>
+</body>
+</html> 
